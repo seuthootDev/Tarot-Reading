@@ -466,17 +466,17 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <div className="flex justify-between items-center mb-3">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-3">
             <h3 className="text-xl font-medium text-amber-300">타로 해석</h3>
             {!isLoading && interpretation && (
-              <div className="flex gap-2">
+              <div className="flex gap-2 self-end sm:self-auto">
                 <button
                   onClick={saveImage}
-                  className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-700 hover:bg-emerald-600 transition-colors text-sm text-emerald-100"
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-700 hover:bg-emerald-600 transition-colors text-xs sm:text-sm text-emerald-100"
                 >
                   <svg 
                     viewBox="0 0 24 24" 
-                    className="w-4 h-4 fill-current"
+                    className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current"
                     aria-hidden="true"
                   >
                     <path d="M19 12v7H5v-7H3v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z"/>
@@ -485,13 +485,13 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
                 </button>
                 <button
                   onClick={shareToX}
-                  className="flex items-center gap-2 px-3 py-1 rounded-full bg-purple-800 hover:bg-purple-700 transition-colors text-sm text-purple-200"
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-800 hover:bg-purple-700 transition-colors text-xs sm:text-sm text-purple-200"
                 >
-                  <Share2 className="w-4 h-4" />
+                  <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span className="flex items-center gap-1">
                     <svg
                       viewBox="0 0 24 24"
-                      className="w-4 h-4 fill-current"
+                      className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current"
                       aria-hidden="true"
                     >
                       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />

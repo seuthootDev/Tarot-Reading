@@ -145,6 +145,48 @@ export default function Home() {
               exit={{ opacity: 0 }}
               className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 px-4"
             >
+              {/* 별자리 연애운 */}
+              <Card
+                className="group relative overflow-hidden p-6 border-blue-500/30 hover:border-blue-400 cursor-pointer transition-all duration-500 hover:shadow-lg hover:shadow-blue-500/20"
+                onClick={() => setReadingType("zodiac-fortune")}
+              >
+                {/* 우주 배경 */}
+                <div className="absolute inset-0 bg-black">
+                  {/* 별들 */}
+                  <div className="absolute inset-0">
+                    {[...Array(20)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="absolute rounded-full bg-white"
+                        style={{
+                          top: `${Math.random() * 100}%`,
+                          left: `${Math.random() * 100}%`,
+                          width: `${Math.random() * 2 + 1}px`,
+                          height: `${Math.random() * 2 + 1}px`,
+                          opacity: Math.random() * 0.7 + 0.3,
+                          animation: `twinkle ${Math.random() * 3 + 2}s infinite ${Math.random() * 2}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+                  {/* 컬러 오버레이 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 to-cyan-900/30" />
+                </div>
+
+                <div className="relative text-center z-10">
+                  <div className="relative">
+                    <div className="absolute inset-0 blur-sm">
+                      <Star className="w-12 h-12 mx-auto mb-4 text-blue-300/50" />
+                    </div>
+                    <Star className="w-12 h-12 mx-auto mb-4 text-blue-200 animate-pulse-slow animate-glow" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-white">별자리 연애운</h3>
+                  <p className="text-sm text-blue-200">
+                    별자리가 알려주는 사랑과 연애의 운을 확인하세요
+                  </p>
+                </div>
+              </Card>
+
               {/* 과거-현재-미래 리딩 */}
               <Card
                 className="group relative overflow-hidden p-6 border-purple-500/30 hover:border-purple-400 cursor-pointer transition-all duration-500 hover:shadow-lg hover:shadow-purple-500/20"
@@ -225,48 +267,6 @@ export default function Home() {
                   <h3 className="text-xl font-semibold mb-2 text-white">황도 12궁 스프레드</h3>
                   <p className="text-sm text-indigo-200">
                     별자리와 운명의 연결고리를 타로와 함께 알아보세요
-                  </p>
-                </div>
-              </Card>
-
-              {/* 별자리 운세 */}
-              <Card
-                className="group relative overflow-hidden p-6 border-blue-500/30 hover:border-blue-400 cursor-pointer transition-all duration-500 hover:shadow-lg hover:shadow-blue-500/20"
-                onClick={() => setReadingType("zodiac-fortune")}
-              >
-                {/* 우주 배경 */}
-                <div className="absolute inset-0 bg-black">
-                  {/* 별들 */}
-                  <div className="absolute inset-0">
-                    {[...Array(20)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="absolute rounded-full bg-white"
-                        style={{
-                          top: `${Math.random() * 100}%`,
-                          left: `${Math.random() * 100}%`,
-                          width: `${Math.random() * 2 + 1}px`,
-                          height: `${Math.random() * 2 + 1}px`,
-                          opacity: Math.random() * 0.7 + 0.3,
-                          animation: `twinkle ${Math.random() * 3 + 2}s infinite ${Math.random() * 2}s`
-                        }}
-                      />
-                    ))}
-                  </div>
-                  {/* 컬러 오버레이 */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 to-cyan-900/30" />
-                </div>
-
-                <div className="relative text-center z-10">
-                  <div className="relative">
-                    <div className="absolute inset-0 blur-sm">
-                      <Star className="w-12 h-12 mx-auto mb-4 text-blue-300/50" />
-                    </div>
-                    <Star className="w-12 h-12 mx-auto mb-4 text-blue-200 animate-pulse-slow animate-glow" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 text-white">별자리 연애운</h3>
-                  <p className="text-sm text-blue-200">
-                    별자리가 알려주는 사랑과 연애의 운을 확인하세요
                   </p>
                 </div>
               </Card>

@@ -7,124 +7,12 @@ import { Sparkles, Moon, Sun, Star, Share2 } from "lucide-react"
 import Image from "next/image"
 import ReactMarkdown from 'react-markdown'
 import html2canvas from 'html2canvas'
+import { tarotCards } from "@/data/tarot-cards"
+import useEmblaCarousel from 'embla-carousel-react'
 
 interface TarotReadingProps {
   selectedCards: number[]
 }
-
-// Tarot card data
-const tarotCards = [
-  {
-    name: "광대 (The Fool)",
-    image: "/tarot-cards/Major Arcana/fool.jpg",
-    meaning: "새로운 시작, 순수함, 모험을 의미합니다. 두려움 없이 앞으로 나아가세요.",
-  },
-  {
-    name: "마법사 (The Magician)",
-    image: "/tarot-cards/Major Arcana/magician.jpg",
-    meaning: "창의력, 숙련된 기술, 자원의 활용을 상징합니다. 당신의 잠재력을 발휘하세요.",
-  },
-  {
-    name: "여사제 (The High Priestess)",
-    image: "/tarot-cards/Major Arcana/high-priestess.jpg",
-    meaning: "직관, 내면의 지혜, 잠재의식을 나타냅니다. 내면의 목소리에 귀를 기울이세요.",
-  },
-  {
-    name: "여황제 (The Empress)",
-    image: "/tarot-cards/Major Arcana/empress.jpg",
-    meaning: "풍요, 창조성, 모성을 상징합니다. 성장과 번영의 시기입니다.",
-  },
-  {
-    name: "황제 (The Emperor)",
-    image: "/tarot-cards/Major Arcana/emperor.jpg",
-    meaning: "권위, 구조, 안정성을 나타냅니다. 리더십을 발휘할 때입니다.",
-  },
-  {
-    name: "교황 (The Hierophant)",
-    image: "/tarot-cards/Major Arcana/hierophant.jpg",
-    meaning: "전통, 교육, 영적 지도를 상징합니다. 지혜를 구하고 배우세요.",
-  },
-  {
-    name: "연인 (The Lovers)",
-    image: "/tarot-cards/Major Arcana/lovers.jpg",
-    meaning: "사랑, 조화, 관계성을 나타냅니다. 중요한 선택의 시기입니다.",
-  },
-  {
-    name: "전차 (The Chariot)",
-    image: "/tarot-cards/Major Arcana/chariot.jpg",
-    meaning: "의지력, 성공, 결단력을 상징합니다. 목표를 향해 전진하세요.",
-  },
-  {
-    name: "힘 (Strength)",
-    image: "/tarot-cards/Major Arcana/strength.jpg",
-    meaning: "내면의 힘, 용기, 인내를 나타냅니다. 당신의 내면의 힘을 믿으세요.",
-  },
-  {
-    name: "은둔자 (The Hermit)",
-    image: "/tarot-cards/Major Arcana/hermit.jpg",
-    meaning: "내면의 성찰, 고독, 지혜를 상징합니다. 고요히 자신을 돌아보세요.",
-  },
-  {
-    name: "운명의 수레바퀴 (Wheel of Fortune)",
-    image: "/tarot-cards/Major Arcana/wheel-of-fortune.jpg",
-    meaning: "운명, 순환, 전환점을 나타냅니다. 변화를 받아들이세요.",
-  },
-  {
-    name: "정의 (Justice)",
-    image: "/tarot-cards/Major Arcana/justice.jpg",
-    meaning: "균형, 진실, 인과응보를 상징합니다. 공정한 결과가 있을 것입니다.",
-  },
-  {
-    name: "매달린 사람 (The Hanged Man)",
-    image: "/tarot-cards/Major Arcana/hanged-man.jpg",
-    meaning: "희생, 포기, 새로운 관점을 나타냅니다. 다른 시각으로 바라보세요.",
-  },
-  {
-    name: "죽음 (Death)",
-    image: "/tarot-cards/Major Arcana/death.jpg",
-    meaning: "끝과 시작, 변화, 변형을 상징합니다. 새로운 시작이 기다립니다.",
-  },
-  {
-    name: "절제 (Temperance)",
-    image: "/tarot-cards/Major Arcana/temperance.jpg",
-    meaning: "균형, 조화, 절제를 나타냅니다. 중용을 지키세요.",
-  },
-  {
-    name: "악마 (The Devil)",
-    image: "/tarot-cards/Major Arcana/devil.jpg",
-    meaning: "속박, 집착, 물질주의를 상징합니다. 당신을 구속하는 것을 파악하세요.",
-  },
-  {
-    name: "탑 (The Tower)",
-    image: "/tarot-cards/Major Arcana/tower.jpg",
-    meaning: "갑작스러운 변화, 혼돈, 계시를 나타냅니다. 피할 수 없는 변화가 옵니다.",
-  },
-  {
-    name: "별 (The Star)",
-    image: "/tarot-cards/Major Arcana/star.jpg",
-    meaning: "희망, 영감, 평온을 상징합니다. 긍정적인 기운이 함께합니다.",
-  },
-  {
-    name: "달 (The Moon)",
-    image: "/tarot-cards/Major Arcana/moon.jpg",
-    meaning: "환상, 불확실성, 직관을 나타냅니다. 내면의 두려움을 마주하세요.",
-  },
-  {
-    name: "태양 (The Sun)",
-    image: "/tarot-cards/Major Arcana/sun.jpg",
-    meaning: "성공, 기쁨, 활력을 상징합니다. 밝은 미래가 기다립니다.",
-  },
-  {
-    name: "심판 (Judgement)",
-    image: "/tarot-cards/Major Arcana/judgement.jpg",
-    meaning: "재생, 깨달음, 변화를 나타냅니다. 새로운 소명을 발견하세요.",
-  },
-  {
-    name: "세계 (The World)",
-    image: "/tarot-cards/Major Arcana/world.jpg",
-    meaning: "완성, 성취, 통합을 상징합니다. 목표가 달성되는 시기입니다.",
-  },
-]
 
 export default function TarotReading({ selectedCards }: TarotReadingProps) {
   const [flippedCards, setFlippedCards] = useState<number[]>([])
@@ -133,9 +21,13 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
   const [isLoading, setIsLoading] = useState(false)
   const cardsSectionRef = useRef<HTMLDivElement>(null)
   const [isCapturing, setIsCapturing] = useState(false)
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: 'start',
+    containScroll: 'trimSnaps'
+  })
 
   // Get the selected tarot cards
-  const selectedTarotCards = selectedCards.map((index) => tarotCards[index % tarotCards.length])
+  const selectedTarotCards = selectedCards.map((index) => tarotCards[index])
 
   // Positions and their meanings
   const positions = [
@@ -146,39 +38,56 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
 
   useEffect(() => {
     const flipWithDelay = async () => {
-      // 카드 뒤집기
-      for (let i = 0; i < selectedCards.length; i++) {
+      // 과거 카드 뒤집기
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      setFlippedCards((prev) => [...prev, 0])
+      
+      if (emblaApi) {
+        // 과거 카드 보여주기 위한 대기
+        await new Promise((resolve) => setTimeout(resolve, 2500))
+        // 현재 카드로 이동
+        emblaApi.scrollNext()
+        // 슬라이드 애니메이션 완료 대기
         await new Promise((resolve) => setTimeout(resolve, 800))
-        setFlippedCards((prev) => [...prev, i])
-      }
-      
-      // 마지막 카드가 뒤집히면 바로 readingComplete를 true로 설정
-      setReadingComplete(true)
-      
-      // API 호출 시작
-      setIsLoading(true)
-      try {
-        const response = await fetch('/api/run-api', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            selectedCards: selectedCards.map(card => tarotCards[card].name)
-          })
-        });
-        const data = await response.json();
-        setInterpretation(data.reading);
-      } catch (error) {
-        console.error('Failed to get interpretation:', error);
-        setInterpretation("죄송합니다. 해석을 가져오는 중에 오류가 발생했습니다.");
-      } finally {
-        setIsLoading(false)
+        // 현재 카드 뒤집기
+        setFlippedCards((prev) => [...prev, 1])
+        
+        // 현재 카드 보여주기 위한 대기
+        await new Promise((resolve) => setTimeout(resolve, 2500))
+        // 미래 카드로 이동
+        emblaApi.scrollNext()
+        // 슬라이드 애니메이션 완료 대기
+        await new Promise((resolve) => setTimeout(resolve, 800))
+        // 미래 카드 뒤집기
+        setFlippedCards((prev) => [...prev, 2])
+        
+        // 모든 카드가 뒤집힌 후에 API 호출
+        setReadingComplete(true)
+        setIsLoading(true)
+        try {
+          const response = await fetch('/api/run-api', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              selectedCards: selectedCards.map(card => tarotCards[card].name),
+              readingType: 'past-present-future'
+            })
+          });
+          const data = await response.json();
+          setInterpretation(data.reading);
+        } catch (error) {
+          console.error('Failed to get interpretation:', error);
+          setInterpretation("죄송합니다. 해석을 가져오는 중에 오류가 발생했습니다.");
+        } finally {
+          setIsLoading(false)
+        }
       }
     }
 
     flipWithDelay()
-  }, [selectedCards])
+  }, [selectedCards, emblaApi])
 
   const shareToX = async () => {
     if (!interpretation || !cardsSectionRef.current) {
@@ -188,7 +97,9 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
 
     try {
       console.log('Starting capture...');
-      setIsCapturing(true);  // 캡처 시작 시 배경 표시
+      setIsCapturing(true);
+
+      // 현재 보이는 카드만 캡처
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       const canvas = await html2canvas(cardsSectionRef.current, {
@@ -200,7 +111,7 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
       });
       
       console.log('Canvas created');
-      setIsCapturing(false);  // 캡처 완료 후 배경 숨김
+      setIsCapturing(false);
 
       canvas.toBlob(async (blob) => {
         if (blob) {
@@ -214,7 +125,6 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
             const firstParagraph = "Ctrl+V 해서 붙여넣기 해주세요!"
             const shareText = `${firstParagraph}\n\n#타로리딩 #운세 #타로카드 #TarotReading`;
             
-            // 얼럿 확인 후 X로 이동
             alert('이미지가 클립보드에 복사되었습니다. X에서 붙여넣기(Ctrl+V)해주세요!\n(팝업창을 허용해주세요!)');
             const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
             window.open(xUrl, '_blank');
@@ -230,38 +140,58 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
       console.error('Error sharing to X:', error);
       alert('공유하는 중에 오류가 발생했습니다.');
     } finally {
-      setIsCapturing(false);  // 에러 발생 시에도 배경 숨김
+      setIsCapturing(false);
     }
   };
 
   const saveImage = async () => {
-    if (!cardsSectionRef.current) {
-      console.error('No content to capture');
-      return;
-    }
-
     try {
       setIsCapturing(true);
-      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      const canvas = await html2canvas(cardsSectionRef.current, {
-        backgroundColor: null,
-        scale: 2,
-        logging: true,
-        useCORS: true,
-        allowTaint: true,
-      });
-      
-      setIsCapturing(false);
+      // 모바일인지 확인
+      const isMobile = window.innerWidth < 768;
 
-      // 캔버스를 이미지로 변환하고 다운로드 링크 생성
-      const link = document.createElement('a');
-      link.download = '타로리딩.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      if (isMobile) {
+        // 모바일: 각 카드별로 캡처
+        for (let i = 0; i < selectedCards.length; i++) {
+          if (emblaApi) {
+            emblaApi.scrollTo(i);
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+          }
 
+          const canvas = await html2canvas(cardsSectionRef.current, {
+            backgroundColor: '#1a1033',
+            scale: 2,
+            logging: true,
+            useCORS: true,
+            allowTaint: true,
+          });
+
+          const positions = ['과거', '현재', '미래'];
+          const link = document.createElement('a');
+          link.download = `타로리딩_${positions[i]}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
+      } else {
+        // 데스크탑: 3장의 카드를 한 번에 캡처
+        const canvas = await html2canvas(cardsSectionRef.current, {
+          backgroundColor: '#1a1033',
+          scale: 2,
+          logging: true,
+          useCORS: true,
+          allowTaint: true,
+        });
+
+        const link = document.createElement('a');
+        link.download = '타로리딩.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }
     } catch (error) {
-      console.error('Error saving image:', error);
+      console.error('Error saving images:', error);
       alert('이미지 저장 중에 오류가 발생했습니다.');
     } finally {
       setIsCapturing(false);
@@ -271,7 +201,12 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
   return (
     <div className="max-w-4xl mx-auto">
       {/* 캡처할 섹션 */}
-      <div ref={cardsSectionRef} className="relative p-8 rounded-lg overflow-hidden">
+      <div 
+        ref={cardsSectionRef} 
+        className={`relative p-4 rounded-lg overflow-hidden ${
+          isCapturing ? 'aspect-[3/4] w-full max-w-[500px] mx-auto' : ''
+        }`}
+      >
         {/* 우주적 배경 효과 - 캡처 시에만 표시 */}
         {isCapturing && (
           <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-purple-950 to-indigo-950">
@@ -297,7 +232,7 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
         {/* 컨텐츠 */}
         <div className="relative z-10">
           <motion.h2
-            className="text-2xl md:text-3xl font-semibold mb-8 text-center text-purple-200"
+            className="text-xl sm:text-2xl md:text-3xl font-semibold mb-6 text-center text-purple-200"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -307,152 +242,34 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
             <Sparkles className="inline-block ml-2 text-amber-300" />
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {selectedTarotCards.map((card, index) => (
-              <div key={index} className="flex flex-col items-center">
-                <motion.div
-                  className="mb-4 text-center"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: flippedCards.includes(index) ? 1 : 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <div className="flex items-center justify-center mb-1">
-                    {positions[index].icon}
-                    <span className="ml-2 text-lg font-medium text-purple-200">{positions[index].title}</span>
+          {/* 모바일에서는 슬라이더, 데스크톱에서는 그리드 */}
+          <div className="md:hidden">
+            <div className="overflow-hidden mobile-cards-container" ref={emblaRef}>
+              <div className="flex">
+                {selectedTarotCards.map((card, index) => (
+                  <div key={index} className="flex-[0_0_100%] px-4">
+                    <TarotCardItem 
+                      card={card} 
+                      index={index} 
+                      position={positions[index]} 
+                      flippedCards={flippedCards} 
+                    />
                   </div>
-                </motion.div>
-
-                <div className="perspective-1000 w-full max-w-[140px] sm:max-w-[160px] md:max-w-[200px] aspect-[2/3]">
-                  <motion.div
-                    className="relative w-full h-full transition-all duration-500 transform-gpu preserve-3d"
-                    initial={{ rotateY: 0 }}
-                    animate={{ rotateY: flippedCards.includes(index) ? 180 : 0 }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    {/* Card Back */}
-                    <Card className="absolute w-full h-full backface-hidden bg-gradient-to-br from-indigo-900 to-purple-950 border-2 border-indigo-700">
-                      <div className="h-full flex items-center justify-center">
-                        <div className="w-full h-full relative overflow-hidden">
-                          {/* Card back design */}
-                          <div className="absolute inset-0">
-                            {/* 메인 테두리 */}
-                            <div className="absolute inset-2 border-2 border-gold-400/40" />
-                            
-                            {/* 반복되는 패턴 배경 */}
-                            <div className="absolute inset-4 grid grid-cols-3 grid-rows-4 gap-1 p-2">
-                              {Array.from({ length: 12 }).map((_, i) => (
-                                <div key={i} className="relative">
-                                  <div className="absolute inset-0 border border-purple-400/20 rotate-45" />
-                                  <div className="absolute inset-1 border border-amber-400/10" />
-                                </div>
-                              ))}
-                            </div>
-
-                            {/* 중앙 장식적 요소 */}
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="relative w-16 h-16 sm:w-20 sm:h-20">
-                                {/* 달 */}
-                                <div className="absolute inset-0 border-2 border-amber-400/40 rounded-full" />
-                                {/* 별 */}
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="w-3/4 h-3/4 relative">
-                                    {[0, 45, 90, 135].map((rotation) => (
-                                      <div
-                                        key={rotation}
-                                        className="absolute inset-0 border border-purple-400/30"
-                                        style={{ transform: `rotate(${rotation}deg)` }}
-                                      />
-                                    ))}
-                                  </div>
-                                </div>
-                                {/* 신비로운 문양 */}
-                                <div className="absolute inset-2 flex items-center justify-center">
-                                  <div className="w-2/3 h-2/3 border border-amber-400/40 rotate-45" />
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* 모서리 장식 */}
-                            <div className="absolute top-2 left-2 w-6 h-6">
-                              <div className="absolute inset-0 border-t-2 border-l-2 border-amber-400/40" />
-                              <div className="absolute inset-1 rotate-45 border border-purple-400/30" />
-                            </div>
-                            <div className="absolute top-2 right-2 w-6 h-6 rotate-90">
-                              <div className="absolute inset-0 border-t-2 border-l-2 border-amber-400/40" />
-                              <div className="absolute inset-1 rotate-45 border border-purple-400/30" />
-                            </div>
-                            <div className="absolute bottom-2 left-2 w-6 h-6 -rotate-90">
-                              <div className="absolute inset-0 border-t-2 border-l-2 border-amber-400/40" />
-                              <div className="absolute inset-1 rotate-45 border border-purple-400/30" />
-                            </div>
-                            <div className="absolute bottom-2 right-2 w-6 h-6 rotate-180">
-                              <div className="absolute inset-0 border-t-2 border-l-2 border-amber-400/40" />
-                              <div className="absolute inset-1 rotate-45 border border-purple-400/30" />
-                            </div>
-
-                            {/* 추가적인 장식적 요소들 */}
-                            <div className="absolute inset-8 border border-purple-400/20 rounded-full" />
-                            <div className="absolute inset-10 border border-amber-400/10 rotate-45" />
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-
-                    {/* Card Front */}
-                    <Card className="absolute w-full h-full backface-hidden rotateY-180 border-2 border-purple-500 overflow-hidden">
-                      <CardContent className="p-0 h-full flex flex-col">
-                        <div className="bg-gradient-to-b from-indigo-900 to-purple-900 p-1 sm:p-2 text-center">
-                          <h3 className="text-xs sm:text-sm font-medium text-purple-200">{card.name}</h3>
-                        </div>
-                        <div className="relative flex-grow bg-black flex items-center justify-center overflow-hidden">
-                          {/* 우주적 배경 효과 */}
-                          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-purple-950 to-indigo-950">
-                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-transparent"></div>
-                            <div className="absolute inset-0">
-                              {[...Array(30)].map((_, i) => (
-                                <div
-                                  key={i}
-                                  className="absolute rounded-full bg-white"
-                                  style={{
-                                    width: Math.random() * 2 + 'px',
-                                    height: Math.random() * 2 + 'px',
-                                    top: Math.random() * 100 + '%',
-                                    left: Math.random() * 100 + '%',
-                                    opacity: Math.random() * 0.7 + 0.3,
-                                    animation: `twinkle ${Math.random() * 4 + 2}s infinite`
-                                  }}
-                                ></div>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="relative w-[90%] h-[90%] z-10">
-                            <Image
-                              src={card.image || "/placeholder.svg"}
-                              alt={card.name}
-                              fill
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              className="object-contain"
-                              priority
-                            />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </div>
-
-                <motion.div
-                  className="mt-6 text-center px-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{
-                    opacity: flippedCards.includes(index) ? 1 : 0,
-                    y: flippedCards.includes(index) ? 0 : 20,
-                  }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                >
-                  <p className="text-purple-200">{card.meaning}</p>
-                </motion.div>
+                ))}
               </div>
+            </div>
+          </div>
+
+          {/* 데스크톱 레이아웃 */}
+          <div className="hidden md:grid md:grid-cols-3 gap-8">
+            {selectedTarotCards.map((card, index) => (
+              <TarotCardItem 
+                key={index} 
+                card={card} 
+                index={index} 
+                position={positions[index]} 
+                flippedCards={flippedCards} 
+              />
             ))}
           </div>
         </div>
@@ -508,7 +325,9 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
                 <span className="animate-pulse">타로를 해석하고 있습니다...</span>
               </span>
             ) : (
-              <ReactMarkdown>{interpretation}</ReactMarkdown>
+              <div className="text-sm md:text-base prose-p:text-sm md:prose-p:text-base prose-headings:text-base md:prose-headings:text-lg">
+                <ReactMarkdown>{interpretation}</ReactMarkdown>
+              </div>
             )}
           </div>
         </motion.div>
@@ -516,4 +335,149 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
     </div>
   )
 }
+
+// CardContent를 TarotCardItem으로 이름 변경
+const TarotCardItem = ({ card, index, position, flippedCards }) => (
+  <div className="flex flex-col items-center">
+    <motion.div
+      className="mb-4 text-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: flippedCards.includes(index) ? 1 : 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="flex items-center justify-center mb-1">
+        {position.icon}
+        <span className="ml-2 text-base sm:text-lg font-medium text-purple-200">{position.title}</span>
+      </div>
+    </motion.div>
+
+    <div className="perspective-1000 w-full max-w-[200px] mx-auto aspect-[2/3]">
+      <motion.div
+        className="relative w-full h-full transition-all duration-500 transform-gpu preserve-3d"
+        initial={{ rotateY: 0 }}
+        animate={{ rotateY: flippedCards.includes(index) ? 180 : 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        {/* Card Back */}
+        <Card className="absolute w-full h-full backface-hidden bg-gradient-to-br from-indigo-900 to-purple-950 border-2 border-indigo-700">
+          <div className="h-full flex items-center justify-center">
+            <div className="w-full h-full relative overflow-hidden">
+              {/* Card back design */}
+              <div className="absolute inset-2 border-2 border-gold-400/40" />
+              
+              {/* 반복되는 패턴 배경 */}
+              <div className="absolute inset-4 grid grid-cols-3 grid-rows-4 gap-1 p-2">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <div key={i} className="relative">
+                    <div className="absolute inset-0 border border-purple-400/20 rotate-45" />
+                    <div className="absolute inset-1 border border-amber-400/10" />
+                  </div>
+                ))}
+              </div>
+
+              {/* 중앙 장식적 요소 */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20">
+                  {/* 달 */}
+                  <div className="absolute inset-0 border-2 border-amber-400/40 rounded-full" />
+                  {/* 별 */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-3/4 h-3/4 relative">
+                      {[0, 45, 90, 135].map((rotation) => (
+                        <div
+                          key={rotation}
+                          className="absolute inset-0 border border-purple-400/30"
+                          style={{ transform: `rotate(${rotation}deg)` }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  {/* 신비로운 문양 */}
+                  <div className="absolute inset-2 flex items-center justify-center">
+                    <div className="w-2/3 h-2/3 border border-amber-400/40 rotate-45" />
+                  </div>
+                </div>
+              </div>
+
+              {/* 모서리 장식 */}
+              <div className="absolute top-2 left-2 w-6 h-6">
+                <div className="absolute inset-0 border-t-2 border-l-2 border-amber-400/40" />
+                <div className="absolute inset-1 rotate-45 border border-purple-400/30" />
+              </div>
+              <div className="absolute top-2 right-2 w-6 h-6 rotate-90">
+                <div className="absolute inset-0 border-t-2 border-l-2 border-amber-400/40" />
+                <div className="absolute inset-1 rotate-45 border border-purple-400/30" />
+              </div>
+              <div className="absolute bottom-2 left-2 w-6 h-6 -rotate-90">
+                <div className="absolute inset-0 border-t-2 border-l-2 border-amber-400/40" />
+                <div className="absolute inset-1 rotate-45 border border-purple-400/30" />
+              </div>
+              <div className="absolute bottom-2 right-2 w-6 h-6 rotate-180">
+                <div className="absolute inset-0 border-t-2 border-l-2 border-amber-400/40" />
+                <div className="absolute inset-1 rotate-45 border border-purple-400/30" />
+              </div>
+
+              {/* 추가적인 장식적 요소들 */}
+              <div className="absolute inset-8 border border-purple-400/20 rounded-full" />
+              <div className="absolute inset-10 border border-amber-400/10 rotate-45" />
+            </div>
+          </div>
+        </Card>
+
+        {/* Card Front */}
+        <Card className="absolute w-full h-full backface-hidden rotateY-180 border-2 border-purple-500 overflow-hidden">
+          <CardContent className="p-0 h-full flex flex-col">
+            <div className="bg-gradient-to-b from-indigo-900 to-purple-900 p-1 sm:p-2 text-center">
+              <h3 className="text-xs sm:text-sm font-medium text-purple-200">{card.name}</h3>
+            </div>
+            <div className="relative flex-grow bg-black flex items-center justify-center overflow-hidden">
+              {/* 우주적 배경 효과 */}
+              <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-purple-950 to-indigo-950">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-transparent"></div>
+                <div className="absolute inset-0">
+                  {[...Array(30)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute rounded-full bg-white"
+                      style={{
+                        width: Math.random() * 2 + 'px',
+                        height: Math.random() * 2 + 'px',
+                        top: Math.random() * 100 + '%',
+                        left: Math.random() * 100 + '%',
+                        opacity: Math.random() * 0.7 + 0.3,
+                        animation: `twinkle ${Math.random() * 4 + 2}s infinite`
+                      }}
+                    ></div>
+                  ))}
+                </div>
+              </div>
+              <div className="relative w-[90%] h-[90%] z-10">
+                <Image
+                  src={card.image || "/placeholder.svg"}
+                  alt={card.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+
+    <motion.div
+      className="mt-4 sm:mt-6 text-center px-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{
+        opacity: flippedCards.includes(index) ? 1 : 0,
+        y: flippedCards.includes(index) ? 0 : 20,
+      }}
+      transition={{ duration: 0.5, delay: 0.3 }}
+    >
+      <p className="text-sm sm:text-base text-purple-200">{card.meaning}</p>
+    </motion.div>
+  </div>
+)
 

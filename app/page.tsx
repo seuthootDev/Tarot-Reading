@@ -2,18 +2,111 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Sparkles } from "lucide-react"
+import { Sparkles, Clock, Asterisk, Star } from "lucide-react"
 import TarotCardSelection from "@/components/tarot-card-selection"
 import TarotReading from "@/components/tarot-reading"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import ZodiacSpreadReading from "@/components/zodiac-spread-reading"
+import ZodiacSignSelection from "@/components/zodiac-sign-selection"
+import LoveFortuneReading from "@/components/love-fortune-reading"
+
+type ReadingType = "past-present-future" | "zodiac-spread" | "zodiac-fortune" | null;
+
+// Zodiac Wheel 컴포넌트 추가
+const ZodiacWheel = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <circle
+      cx="12"
+      cy="12"
+      r="10"
+      stroke="currentColor"
+      strokeWidth="1"
+      className="opacity-70"
+    />
+    <circle
+      cx="12"
+      cy="12"
+      r="7"
+      stroke="currentColor"
+      strokeWidth="0.5"
+      className="opacity-50"
+    />
+    {/* 12개의 구획선 */}
+    {[...Array(12)].map((_, i) => (
+      <line
+        key={i}
+        x1="12"
+        y1="5"
+        x2="12"
+        y2="2"
+        stroke="currentColor"
+        strokeWidth="0.5"
+        className="opacity-60"
+        transform={`rotate(${i * 30} 12 12)`}
+      />
+    ))}
+    {/* 작은 장식 점들 */}
+    {[...Array(12)].map((_, i) => (
+      <circle
+        key={i}
+        cx="12"
+        cy="3.5"
+        r="0.5"
+        fill="currentColor"
+        className="opacity-80"
+        transform={`rotate(${i * 30} 12 12)`}
+      />
+    ))}
+  </svg>
+);
+
+const getHeaderText = (readingType: ReadingType) => {
+  switch (readingType) {
+    case "past-present-future":
+      return "과거, 현재, 미래를 살펴보는 타로 리딩";
+    case "zodiac-spread":
+      return "황도 12궁을 통해 보는 운명의 타로 리딩";
+    case "zodiac-fortune":
+      return "별자리로 보는 당신의 연애운";
+    default:
+      return "원하시는 타로 리딩 방식을 선택하세요";
+  }
+};
 
 export default function Home() {
   const [selectedCards, setSelectedCards] = useState<number[]>([])
   const [showReading, setShowReading] = useState(false)
+  const [readingType, setReadingType] = useState<ReadingType>(null)
+  const [currentRound, setCurrentRound] = useState(1)
+  const [selectedSign, setSelectedSign] = useState<string | null>(null)
 
   const startOver = () => {
     setSelectedCards([])
     setShowReading(false)
+    setReadingType(null)
+    setSelectedSign(null)
+  }
+
+  const handleNextRound = () => {
+    if (readingType === "zodiac-spread" && currentRound < 3) {
+      setCurrentRound(prev => prev + 1)
+    }
+  }
+
+  // 현재 라운드의 선택이 완료되었는지 확인하는 함수
+  const isCurrentRoundComplete = () => {
+    if (readingType === "zodiac-spread") {
+      const startIndex = (currentRound - 1) * 4;
+      const currentRoundCards = selectedCards.slice(startIndex, startIndex + 4);
+      return currentRoundCards.length === 4;
+    }
+    return selectedCards.length === 3; // 과거-현재-미래 리딩의 경우
   }
 
   return (
@@ -38,57 +131,170 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            당신의 운명을 알려줄 카드를 선택하세요
+            {getHeaderText(readingType)}
             <Sparkles className="inline-block ml-2 text-amber-300" />
           </motion.p>
         </header>
 
         <AnimatePresence mode="wait">
-          {!showReading ? (
+          {!readingType ? (
             <motion.div
               key="selection"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
+              className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 px-4"
             >
-              <TarotCardSelection selectedCards={selectedCards} setSelectedCards={setSelectedCards} />
+              {/* 과거-현재-미래 리딩 */}
+              <Card
+                className="group relative overflow-hidden p-6 border-purple-500/30 hover:border-purple-400 cursor-pointer transition-all duration-500 hover:shadow-lg hover:shadow-purple-500/20"
+                onClick={() => setReadingType("past-present-future")}
+              >
+                {/* 우주 배경 */}
+                <div className="absolute inset-0 bg-black">
+                  {/* 별들 */}
+                  <div className="absolute inset-0">
+                    {[...Array(20)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="absolute rounded-full bg-white"
+                        style={{
+                          top: `${Math.random() * 100}%`,
+                          left: `${Math.random() * 100}%`,
+                          width: `${Math.random() * 2 + 1}px`,
+                          height: `${Math.random() * 2 + 1}px`,
+                          opacity: Math.random() * 0.7 + 0.3,
+                          animation: `twinkle ${Math.random() * 3 + 2}s infinite ${Math.random() * 2}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+                  {/* 컬러 오버레이 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-900/30 to-indigo-900/30" />
+                </div>
 
-              {selectedCards.length === 3 && (
-                <motion.div
-                  className="text-center mt-8"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <Button
-                    onClick={() => setShowReading(true)}
-                    className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-2 rounded-full text-lg shadow-lg shadow-purple-900/30"
-                  >
-                    리딩 보기
-                  </Button>
-                </motion.div>
-              )}
+                <div className="relative text-center z-10">
+                  <div className="relative">
+                    <div className="absolute inset-0 blur-sm">
+                      <Clock className="w-12 h-12 mx-auto mb-4 text-purple-300/50" />
+                    </div>
+                    <Clock className="w-12 h-12 mx-auto mb-4 text-purple-200 animate-spin-slow" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-white">과거-현재-미래</h3>
+                  <p className="text-sm text-purple-200">
+                    시간의 흐름 속에서 당신의 과거, 현재, 그리고 미래를 살펴보세요
+                  </p>
+                </div>
+              </Card>
+
+              {/* 별자리 스프레드 */}
+              <Card
+                className="group relative overflow-hidden p-6 border-indigo-500/30 hover:border-indigo-400 cursor-pointer transition-all duration-500 hover:shadow-lg hover:shadow-indigo-500/20"
+                onClick={() => setReadingType("zodiac-spread")}
+              >
+                {/* 우주 배경 */}
+                <div className="absolute inset-0 bg-black">
+                  {/* 별들 */}
+                  <div className="absolute inset-0">
+                    {[...Array(20)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="absolute rounded-full bg-white"
+                        style={{
+                          top: `${Math.random() * 100}%`,
+                          left: `${Math.random() * 100}%`,
+                          width: `${Math.random() * 2 + 1}px`,
+                          height: `${Math.random() * 2 + 1}px`,
+                          opacity: Math.random() * 0.7 + 0.3,
+                          animation: `twinkle ${Math.random() * 3 + 2}s infinite ${Math.random() * 2}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+                  {/* 컬러 오버레이 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/30 to-blue-900/30" />
+                </div>
+
+                <div className="relative text-center z-10">
+                  <div className="relative">
+                    <div className="absolute inset-0 blur-sm">
+                      <ZodiacWheel className="w-12 h-12 mx-auto mb-4 text-indigo-300/50" />
+                    </div>
+                    <ZodiacWheel className="w-12 h-12 mx-auto mb-4 text-indigo-200 animate-spin-slow" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-white">황도 12궁 스프레드</h3>
+                  <p className="text-sm text-indigo-200">
+                    별자리와 운명의 연결고리를 타로와 함께 알아보세요
+                  </p>
+                </div>
+              </Card>
+
+              {/* 별자리 운세 */}
+              <Card
+                className="group relative overflow-hidden p-6 border-blue-500/30 hover:border-blue-400 cursor-pointer transition-all duration-500 hover:shadow-lg hover:shadow-blue-500/20"
+                onClick={() => setReadingType("zodiac-fortune")}
+              >
+                {/* 우주 배경 */}
+                <div className="absolute inset-0 bg-black">
+                  {/* 별들 */}
+                  <div className="absolute inset-0">
+                    {[...Array(20)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="absolute rounded-full bg-white"
+                        style={{
+                          top: `${Math.random() * 100}%`,
+                          left: `${Math.random() * 100}%`,
+                          width: `${Math.random() * 2 + 1}px`,
+                          height: `${Math.random() * 2 + 1}px`,
+                          opacity: Math.random() * 0.7 + 0.3,
+                          animation: `twinkle ${Math.random() * 3 + 2}s infinite ${Math.random() * 2}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+                  {/* 컬러 오버레이 */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 to-cyan-900/30" />
+                </div>
+
+                <div className="relative text-center z-10">
+                  <div className="relative">
+                    <div className="absolute inset-0 blur-sm">
+                      <Star className="w-12 h-12 mx-auto mb-4 text-blue-300/50" />
+                    </div>
+                    <Star className="w-12 h-12 mx-auto mb-4 text-blue-200 animate-pulse-slow animate-glow" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2 text-white">별자리 연애운</h3>
+                  <p className="text-sm text-blue-200">
+                    별자리가 알려주는 사랑과 연애의 운을 확인하세요
+                  </p>
+                </div>
+              </Card>
             </motion.div>
+          ) : !showReading ? (
+            readingType === "zodiac-fortune" && !selectedSign ? (
+              <ZodiacSignSelection onSelectSign={(sign) => setSelectedSign(sign)} />
+            ) : (
+              <TarotCardSelection 
+                selectedCards={selectedCards} 
+                setSelectedCards={setSelectedCards}
+                readingType={readingType}
+                currentRound={currentRound}
+                setShowReading={setShowReading}
+                onNextRound={handleNextRound}
+              />
+            )
           ) : (
-            <motion.div
-              key="reading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
+            readingType === "zodiac-fortune" ? (
+              <LoveFortuneReading 
+                selectedCard={selectedCards[0]}
+                zodiacSign={selectedSign}
+              />
+            ) : readingType === "zodiac-spread" ? (
+              <ZodiacSpreadReading selectedCards={selectedCards} />
+            ) : (
               <TarotReading selectedCards={selectedCards} />
-              <div className="text-center mt-12">
-                <Button
-                  onClick={startOver}
-                  variant="outline"
-                  className="border-purple-400 bg-purple-900/50 text-white hover:text-white hover:bg-purple-800 hover:border-purple-300"
-                >
-                  다시 시작하기
-                </Button>
-              </div>
-            </motion.div>
+            )
           )}
         </AnimatePresence>
       </div>

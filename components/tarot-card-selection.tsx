@@ -38,7 +38,7 @@ export default function TarotCardSelection({
       ? 16 
       : readingType === "zodiac-fortune"
         ? 9  // 별자리 연애운의 경우 9장만 표시
-        : 12
+        : 16
     setDisplayedCards(shuffled.slice(0, displayCount))
   }, [currentRound, readingType])
 
@@ -118,7 +118,7 @@ export default function TarotCardSelection({
       <div className={cn(
         "grid gap-4 max-w-4xl mx-auto",
         readingType === "zodiac-fortune"
-          ? "grid-cols-3 md:grid-cols-3" // 별자리 연애운은 3x3 그리드
+          ? "grid-cols-3 md:grid-cols-9" // 별자리 연애운은 3x3 그리드 9
           : "grid-cols-4 md:grid-cols-8"
       )}>
         {displayedCards.map((cardIndex) => {

@@ -32,7 +32,7 @@ export default function ZodiacSignSelection({ onSelectSign }: ZodiacSignSelectio
       >
         당신의 별자리를 선택해주세요
       </motion.h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {zodiacSigns.map((sign, index) => (
           <motion.div
             key={sign.name}

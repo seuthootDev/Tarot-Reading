@@ -8,6 +8,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { tarotCards } from "@/data/tarot-cards"
 import useEmblaCarousel from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight, Share2 } from 'lucide-react'
+import { Button } from "./ui/button"
 
 const ZodiacWheel = () => {
   // 별자리 정보 배열 추가
@@ -483,6 +484,19 @@ export default function ZodiacSpreadReading({ selectedCards }: { selectedCards: 
         </button>
       </div>
 
+      {/* 터치 안내문 */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+        className="text-center mb-8"
+      >
+        <p className="text-purple-300 text-sm">
+          <span className="inline-block animate-bounce mr-2">👆</span>
+          카드를 터치하여 상세한 의미를 확인하세요
+        </p>
+      </motion.div>
+
       {/* 선택된 카드의 의미 */}
       {selectedCardIndex !== null && flippedCards.includes(selectedCardIndex) && (
         <motion.div
@@ -537,8 +551,18 @@ export default function ZodiacSpreadReading({ selectedCards }: { selectedCards: 
               <ReactMarkdown>{interpretation}</ReactMarkdown>
             </div>
           ) : null}
+          {/* Add Return Button */}
+          <div className="mt-8 text-center">
+            <Button
+              onClick={() => window.location.href = '/'}
+              className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-2 rounded-full text-lg shadow-lg shadow-purple-900/30"
+            >
+              처음으로
+            </Button>
+          </div>
         </div>
       </motion.div>
+
     </div>
   )
 } 

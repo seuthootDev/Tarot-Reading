@@ -9,6 +9,7 @@ import ReactMarkdown from 'react-markdown'
 import html2canvas from 'html2canvas'
 import { tarotCards } from "@/data/tarot-cards"
 import useEmblaCarousel from 'embla-carousel-react'
+import { Button } from "@/components/ui/button"
 
 interface TarotReadingProps {
   selectedCards: number[]
@@ -329,6 +330,16 @@ export default function TarotReading({ selectedCards }: TarotReadingProps) {
                 <ReactMarkdown>{interpretation}</ReactMarkdown>
               </div>
             )}
+          </div>
+
+          {/* 처음으로 버튼 추가 */}
+          <div className="mt-8 text-center">
+            <Button
+              onClick={() => window.location.href = '/'}
+              className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-2 rounded-full text-lg shadow-lg shadow-purple-900/30"
+            >
+              처음으로
+            </Button>
           </div>
         </motion.div>
       )}

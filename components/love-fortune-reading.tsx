@@ -354,7 +354,10 @@ export default function LoveFortuneReading({ selectedCard, zodiacSign }: LoveFor
         {flipped && (
           <motion.div
             ref={interpretationRef}
-            className="mt-8 p-6 rounded-lg bg-purple-900/30 border border-purple-700 relative z-10"
+            className="mt-8 p-6 rounded-lg bg-purple-900/30 border border-purple-700"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
           >
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-medium text-pink-300 flex items-center">
@@ -380,6 +383,16 @@ export default function LoveFortuneReading({ selectedCard, zodiacSign }: LoveFor
               ) : (
                 <ReactMarkdown>{interpretation}</ReactMarkdown>
               )}
+            </div>
+
+            {/* 처음으로 버튼 추가 */}
+            <div className="mt-8 text-center">
+              <Button
+                onClick={() => window.location.href = '/'}
+                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-2 rounded-full text-lg shadow-lg shadow-purple-900/30"
+              >
+                처음으로
+              </Button>
             </div>
           </motion.div>
         )}

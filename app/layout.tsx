@@ -21,15 +21,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      {process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID && (
-        <Script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}`}
-          crossOrigin="anonymous"
-          strategy="lazyOnload"
-          id="google-adsense"
-        />
-      )}
+      <head>
+        {process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}`}
+            crossOrigin="anonymous"
+            strategy="lazyOnload"
+            id="google-adsense"
+          />
+        )}
+      </head>
       <body>{children}</body>
     </html>
   )

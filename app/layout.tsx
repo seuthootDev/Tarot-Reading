@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import './globals.css'
 import Script from 'next/script'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: '신비로운 타로 리딩',
@@ -21,19 +21,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <head>
-        {/* Google AdSense 스니펫 */}
+      {process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID && (
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2741336313830341"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}`}
           crossOrigin="anonymous"
           strategy="lazyOnload"
           id="google-adsense"
-          onError={(e) => {
-            console.error('Script failed to load', e)
-          }}
         />
-      </head>
+      )}
       <body>{children}</body>
     </html>
   )

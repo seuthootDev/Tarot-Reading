@@ -322,7 +322,6 @@ export default function ZodiacSpreadReading({ selectedCards }: { selectedCards: 
           readingType: 'zodiac-spread'
         };
         
-        console.log('API 요청:', requestBody);
 
         const response = await fetch('/api/run-api', {
           method: 'POST',
@@ -333,7 +332,6 @@ export default function ZodiacSpreadReading({ selectedCards }: { selectedCards: 
         });
 
         const data = await response.json();
-        console.log('API 응답:', data);
         setInterpretation(data.reading);
         setIsComplete(true); // 해석 완료 표시
       } catch (error) {

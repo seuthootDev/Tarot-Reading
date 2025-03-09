@@ -45,7 +45,6 @@ export default async function handler(req, res) {
       공백 포함 500자 이내로 작성해주세요.
       `;
     } else if (readingType === 'zodiac-spread') {
-      console.log('조디악 스프레드 처리 중'); // 처리 과정 로그
       if (!Array.isArray(selectedCards) || selectedCards.length !== 12) {
         return res.status(400).json({ message: "12개의 카드가 필요합니다" });
       }
@@ -129,13 +128,9 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: "올바르지 않은 리딩 타입입니다" });
     }
 
-    console.log('생성될 프롬프트:', prompt);
-
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
-
-    console.log('AI 응답:', text.substring(0, 100) + '...');
 
     return res.status(200).json({ reading: text });
   } catch (error) {

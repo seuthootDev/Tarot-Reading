@@ -298,6 +298,20 @@ export default function Home() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* 쿠팡 광고 */}
+      <div className="my-8 flex justify-center">
+        <iframe 
+          src="https://ads-partners.coupang.com/widgets.html?id=845917&template=carousel&trackingCode=AF5238334&subId=&width=680&height=140&tsource="
+          width="680" 
+          height="140" 
+          frameBorder="0" 
+          scrolling="no" 
+          referrerPolicy="unsafe-url"
+          className="max-w-full"
+          sandbox="allow-scripts allow-same-origin allow-popups"
+        />
+      </div>
     </main>
   )
 }

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://tarot-reading-virid.vercel.app/sitemap.xml 

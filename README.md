@@ -59,6 +59,3 @@ npm run dev
 ![타로 해석](/screenshots/3.png)
 *AI가 타로카드를 해석해줍니다*
 
-## 🤝 기여하기
-
-버그 리포트나 기능 제안은 언제나 환영합니다! Issue나 Pull Request를 생성해주세요.

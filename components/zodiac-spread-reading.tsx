@@ -332,11 +332,21 @@ export default function ZodiacSpreadReading({ selectedCards }: { selectedCards: 
         });
 
         const data = await response.json();
+        if (!response.ok) {
+          throw new Error(
+            data?.detail
+              ? `${data?.message || `API 요청 실패 (${response.status})`} - ${data.detail}`
+              : (data?.message || `API 요청 실패 (${response.status})`)
+          )
+        }
+        if (!data?.reading) {
+          throw new Error('응답에 해석 결과가 없습니다.')
+        }
         setInterpretation(data.reading);
         setIsComplete(true); // 해석 완료 표시
       } catch (error) {
         console.error('API 오류:', error);
-        setInterpretation("죄송합니다. 해석을 가져오는 중에 오류가 발생했습니다.");
+        setInterpretation(`죄송합니다. 해석을 가져오는 중 오류가 발생했습니다.\n${error instanceof Error ? error.message : ''}`);
       } finally {
         setIsLoading(false)
       }

@@ -1,5 +1,6 @@
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const DEFAULT_GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
+const IS_PROD = process.env.NODE_ENV === "production";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -150,15 +151,33 @@ export default async function handler(req, res) {
       }),
     });
 
+    const responseText = await groqResponse.text();
+
     if (!groqResponse.ok) {
-      const errorBody = await groqResponse.text();
-      console.error("Groq API 오류:", errorBody);
+      console.error("Groq API 오류:", {
+        status: groqResponse.status,
+        body: responseText,
+      });
       return res.status(groqResponse.status).json({
         message: "Groq API 호출 중 오류가 발생했습니다",
+        detail: responseText?.slice(0, 500) || "응답 본문이 비어 있습니다",
       });
     }
 
-    const data = await groqResponse.json();
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error("Groq 응답 파싱 실패:", {
+        parseError,
+        body: responseText,
+      });
+      return res.status(502).json({
+        message: "Groq 응답 파싱에 실패했습니다",
+        detail: responseText?.slice(0, 500) || "응답 본문이 비어 있습니다",
+      });
+    }
+
     const text = data?.choices?.[0]?.message?.content?.trim();
 
     if (!text) {
@@ -168,6 +187,12 @@ export default async function handler(req, res) {
     return res.status(200).json({ reading: text });
   } catch (error) {
     console.error("상세 에러 정보:", error);
-    return res.status(500).json({ message: "타로 리딩 중 오류가 발생했습니다" });
+    return res.status(500).json({
+      message: "타로 리딩 중 오류가 발생했습니다",
+      detail: error instanceof Error ? error.message : "알 수 없는 서버 오류",
+      ...(IS_PROD
+        ? {}
+        : { stack: error instanceof Error ? error.stack : undefined }),
+    });
   }
 }

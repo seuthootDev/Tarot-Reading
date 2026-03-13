@@ -5,7 +5,7 @@ AI가 당신의 운명을 타로카드로 읽어드립니다.
 ## 🌟 주요 기능
 
 - 🃏 3장의 타로카드 자동 선택
-- 🤖 Google Gemini AI의 타로 해석
+- 🤖 Groq API 기반 AI 타로 해석
 - 📱 모바일 친화적인 반응형 디자인
 - 📤 결과 저장 및 소셜 미디어 공유
 
@@ -13,7 +13,7 @@ AI가 당신의 운명을 타로카드로 읽어드립니다.
 
 - **Frontend**: Next.js 14, React, TypeScript
 - **Styling**: TailwindCSS
-- **AI**: Google Gemini 2.0 flash
+- **AI**: Groq Chat Completions API
 - **Animation**: Framer Motion
 - **UI Components**: shadcn/ui
 
@@ -34,8 +34,11 @@ npm install --legacy-peer-deps
 
 3. 환경 변수 설정
 
+`.env.local` 파일을 만들고 아래 값을 설정하세요.
+
 ```bash
-cp .env.example .env.local
+GROQ_API_KEY=여기에_발급받은_키_입력
+GROQ_MODEL=llama-3.1-8b-instant
 ```
 
 4. 개발 서버 실행

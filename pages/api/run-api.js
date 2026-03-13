@@ -1,19 +1,18 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { NextApiRequest, NextApiResponse } from "next";
-
-// Gemini Pro 모델 초기화
-const genAI = new GoogleGenerativeAI(process.env.APIKEY || "");
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+const DEFAULT_GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
+  if (!process.env.GROQ_API_KEY) {
+    return res.status(500).json({ message: "GROQ_API_KEY가 설정되지 않았습니다" });
+  }
+
   try {
     const { selectedCards, readingType, zodiacSign, selectedCard } = req.body;
     console.log('API 수신된 데이터:', { selectedCards, readingType, zodiacSign, selectedCard });
-
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     let prompt = '';
     
@@ -128,9 +127,43 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: "올바르지 않은 리딩 타입입니다" });
     }
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const groqResponse = await fetch(GROQ_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: DEFAULT_GROQ_MODEL,
+        temperature: 0.7,
+        messages: [
+          {
+            role: "system",
+            content:
+              "당신은 타로 리딩 전문가입니다. 공감적이고 따뜻한 톤으로 간결하고 실용적인 해석을 제공합니다.",
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      }),
+    });
+
+    if (!groqResponse.ok) {
+      const errorBody = await groqResponse.text();
+      console.error("Groq API 오류:", errorBody);
+      return res.status(groqResponse.status).json({
+        message: "Groq API 호출 중 오류가 발생했습니다",
+      });
+    }
+
+    const data = await groqResponse.json();
+    const text = data?.choices?.[0]?.message?.content?.trim();
+
+    if (!text) {
+      return res.status(502).json({ message: "Groq 응답이 비어 있습니다" });
+    }
 
     return res.status(200).json({ reading: text });
   } catch (error) {
